@@ -38,4 +38,4 @@ class PhotoEditType extends AbstractType {
     {
         return new PhotoType();
     }
-} 
+}

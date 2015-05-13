@@ -252,7 +252,7 @@ class Photo
      */
     public function upload()
     {
-        if (null == $this->file)
+        if (null === $this->file)
             return;
 
         $this->file->move($this->getUploadRootDir(), $this->path);

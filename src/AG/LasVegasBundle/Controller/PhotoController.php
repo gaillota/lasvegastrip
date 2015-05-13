@@ -124,4 +124,4 @@ class PhotoController extends Controller
 
         return new JsonResponse('ok');
     }
-} 
+}
