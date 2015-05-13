@@ -1,0 +1,25 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h2>Supprimer un album <small>{{ album.name }}</small></h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+            <hr/>
+            <p>Êtes-vous sûr de vouloir supprimer l'album "{{ album.name }}" ?</p>
+            <form action="{{ path('ag_album_remove', { 'id': album.id }) }}" method="POST">
+                <a class="btn btn-default" href="{{ path('ag_lasvegasbundle_home') }}">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Retour à l'index
+                </a>
+                <button class="btn btn-danger" type="submit">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    Supprimer
+                </button>
+                {{ form_rest(form) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

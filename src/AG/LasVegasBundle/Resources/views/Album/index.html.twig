@@ -1,0 +1,77 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <img class="img-responsive img-thumbnail" src="{{ asset('img/banner-las-vegas.jpg') }}"
+                 alt="Las Vegas Banner"/>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row">
+                {% for album in listAlbums %}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ path('ag_album_show', { 'id': album.id }) }}"><i class="fa fa-camera-retro"></i> {{ album.name }}</a>
+                            {% if is_granted('ROLE_ADMIN') and app.user == album.author %}
+                                <div class="pull-right">
+                                    <a class="btn btn-success btn-xs"
+                                       href="{{ path('ag_album_upload', { 'id': album.id }) }}"><i class="fa fa-plus"></i></a>
+                                    <a class="btn btn-warning btn-xs" href="{{ path('ag_album_edit', { 'id': album.id }) }}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-xs" href="{{ path('ag_album_remove', { 'id': album.id }) }}">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {% for photo in album.photos %}
+                                    <a href="{{ path('ag_album_show', { 'id': album.id }) }}" class="album_thumbnail">
+                                        <img class="img-responsive img-shadow" src="{{ asset(photo.webpath) }}"
+                                             alt="" data-index="{{ loop.index }}"/>
+                                    </a>
+                            {% else %}
+                                Aucune photo dans cet album
+                            {% endfor %}
+                            <hr/>
+                            {% if album.description is not null %}
+                                {{ album.description }}
+                            {% else %}
+                                <p>Aucune description</p>
+                            {% endif %}
+                            <div class="clearfix"></div>
+                            <div class="pull-right">
+                                <small><em>{{ album.createdAt|date('d M Y \à H:i:s') }}</em></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-xs-12 text-center">
+                    Aucun album pour le moment.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(function() {
+            $('.album_thumbnail').hover(function() {
+                var _a = $(this);
+                var _img = _a.children('img').first();
+
+                _img.css({
+                    'background-color' : 'rgba(0,0,0,0.5)'
+                });
+            });
+        });
+    </script>
+{% endblock %}

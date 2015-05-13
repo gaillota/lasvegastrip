@@ -1,0 +1,47 @@
+<?php
+
+namespace AG\UserBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
+
+/**
+ * User
+ *
+ * @ORM\Table(name="las_vegas_user")
+ * @ORM\Entity(repositoryClass="AG\UserBundle\Entity\UserRepository")
+ */
+class User extends BaseUser
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AG\LasVegasBundle\Entity\Album", mappedBy="author")
+     */
+    private $albums;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->albums = new ArrayCollection;
+    }
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

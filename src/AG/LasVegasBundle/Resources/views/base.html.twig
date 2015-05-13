@@ -1,0 +1,8 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    {% if app.user %}
+        {% include '::nav.html.twig' %}
+    {% endif %}
+    {% block lasvegasbundle_body %}{% endblock %}
+{% endblock %}

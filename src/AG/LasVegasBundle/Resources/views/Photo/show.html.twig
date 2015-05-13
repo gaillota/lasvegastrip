@@ -1,0 +1,46 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h1 style="margin-bottom: 30px">
+                <a href="{{ path('ag_album_show', { 'id': photo.album.id }) }}">{{ photo.album.name }}</a>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <img class="img-responsive img-shadow" src="{{ asset(photo.webpath) }}" alt="album-{{ photo.album.id }}-photo-{{ photo.id }}"/>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    {{ photo.name }}
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <i>
+                            {% if photo.comment is not null %}
+                                {{ photo.comment }}
+                            {% else %}
+                                Aucun commentaire
+                            {% endif %}
+                        </i>
+                    </p>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item text-right">
+                        <small><em>ajouté par</em> {{ photo.author }}<em>
+                        <br>le {{ photo.updatedAt|date("d M Y \à H:i:s") }}</em></small>
+                    </li>
+                </ul>
+                {% if is_granted('ROLE_ADMIN') and app.user == photo.author %}
+                <div class="panel-footer text-right">
+                    <a class="btn btn-xs btn-warning" href="{{ path('ag_photo_edit', { 'id': photo.id }) }}"><span class="glyphicon glyphicon-edit"></span> Editer</a>
+                    <a class="btn btn-xs btn-danger" href="{{ path('ag_photo_remove', { 'id': photo.id }) }}"><span class="glyphicon glyphicon-remove"></span> Supprimer</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

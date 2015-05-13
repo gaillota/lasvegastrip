@@ -1,0 +1,14 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h1>Nouvel album</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+            {% include 'AGLasVegasBundle:Album:form.html.twig' %}
+        </div>
+    </div>
+{% endblock %}

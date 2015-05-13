@@ -1,0 +1,120 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}"/>
+{% endblock %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-md-1">
+            <a href="{{ path('ag_lasvegasbundle_home') }}"><h1><i class="fa fa-arrow-left"></i></h1></a>
+        </div>
+        <div class="col-md-11">
+            <h1><i class="fa fa-camera-retro"></i> {{ album.name }}</h1>
+            <div class="small">{{ album.createdAt|date('d M Y \à H:i:s') }}</div>
+            <div class="small">par <em>{{ album.author.username }}</em></div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="zoom-gallery">
+                <div class="row">
+                    <!--
+
+                    Width/height ratio of thumbnail and the main image must match to avoid glitches.
+
+                    If ratios are different, you may add CSS3 opacity transition to the main image to make the change less noticable.
+
+                     -->
+
+                    {% for photo in album.photos %}
+                        <div class="col-md-3 col-sm-6 col-xs-12 album_thumbnail" style="margin-bottom: 20px;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{ photo.name }}
+                                    {% if is_granted('ROLE_ADMIN') and app.user == photo.author %}
+                                        <div class="pull-right">
+                                            <button class="btn btn-warning btn-xs album_photo_edit" data-href="{{ path('ag_photo_edit', { 'id': photo.id }) }}">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs"
+                                                    data-remove-href="{{ path('ag_photo_remove', { 'id': photo.id }) }}">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="panel-body">
+                                    <a href="{{ asset(photo.webpath) }}"
+                                                            data-source="{{ path('ag_photo_show', { 'id': photo.id }) }}"
+                                                            title="{{ photo.name }}">
+                                        <img class="img-responsive img-shadow" src="{{ asset(photo.webpath) }}"/>
+                                    </a>
+                                </div>
+                                {% if photo.comment is not null %}
+                                <div class="panel-footer">
+                                    <em><small>{{ photo.comment }}</small></em>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                Il n'y a aucune photo dans cette album.
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/magnific-popup.js') }}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('.zoom-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                closeOnContentClick: false,
+                closeBtnInside: false,
+                mainClass: 'mfp-with-zoom mfp-img-mobile',
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'" target="_blank">image source</a>';
+                    }
+                },
+                gallery: {
+                    enabled: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300, // don't foget to change the duration also in CSS
+                    opener: function(element) {
+                        return element.find('img');
+                    }
+                }
+
+            });
+
+            $('[data-remove-href]').click(function(e) {
+                e.preventDefault();
+
+                $.get($(this).data('remove-href'));
+                $(this).parents('.album_thumbnail').animate({opacity:0}, 500, function() {
+                    $(this).remove();
+                });
+            });
+
+            $('.album_photo_edit').click(function(e) {
+                e.preventDefault();
+
+                location.href = $(this).data('href');
+            })
+        });
+    </script>
+{% endblock %}

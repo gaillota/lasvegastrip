@@ -1,0 +1,12 @@
+ag_lasvegasbundle_home:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:Album:index }
+
+ag_lasvegasbundle_album:
+    resource: "@AGLasVegasBundle/Resources/config/routing/album.yml"
+    prefix: /album
+
+ag_lasvegasbundle_photo:
+    resource: "@AGLasVegasBundle/Resources/config/routing/photo.yml"
+    prefix: /photo
+

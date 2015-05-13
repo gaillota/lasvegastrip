@@ -1,0 +1,35 @@
+ag_album_index:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:Album:index }
+
+ag_album_new:
+    path: /new
+    defaults: { _controller: AGLasVegasBundle:Album:new }
+
+ag_album_show:
+    path: /{id}
+    defaults: { _controller: AGLasVegasBundle:Album:show }
+    requirements:
+        id: \d+
+
+ag_album_edit:
+    path: /{id}/edit
+    defaults: { _controller: AGLasVegasBundle:Album:edit }
+    requirements:
+        id: \d+
+
+ag_album_remove:
+    path: /{id}/remove
+    defaults: { _controller: AGLasVegasBundle:Album:remove }
+    requirements:
+        id: \d+
+
+ag_album_upload:
+    path: /{id}/upload
+    defaults: { _controller: AGLasVegasBundle:Album:upload }
+    requirements:
+        id: \d+
+
+ag_album_my_albums:
+    path: /my-albums
+    defaults: { _controller: AGLasVegasBundle:Album:myAlbums }

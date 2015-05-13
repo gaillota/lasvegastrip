@@ -1,0 +1,25 @@
+ag_photo_index:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:Photo:index }
+
+ag_photo_new:
+    path: /new
+    defaults: { _controller: AGLasVegasBundle:Photo:new }
+
+ag_photo_show:
+    path: /{id}
+    defaults: { _controller: AGLasVegasBundle:Photo:show }
+    requirements:
+        id: \d+
+
+ag_photo_edit:
+    path: /{id}/edit
+    defaults: { _controller: AGLasVegasBundle:Photo:edit }
+    requirements:
+        id: \d+
+
+ag_photo_remove:
+    path: /{id}/remove
+    defaults: { _controller: AGLasVegasBundle:Photo:remove }
+    requirements:
+        id: \d+

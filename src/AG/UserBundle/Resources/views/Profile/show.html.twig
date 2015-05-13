@@ -1,0 +1,34 @@
+{% extends 'AGUserBundle::base.html.twig' %}
+
+{% block h1_title %}<i class="fa fa-user"></i>&nbsp;{{ user.username }}{% endblock %}
+
+{% block user_bundle_content  %}
+    {% trans_default_domain 'FOSUserBundle' %}
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Informations personnelles
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-user"></span> {{ 'profile.show.username'|trans }} : {{ user.username }}
+                    </li>
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-envelope"></span> {{ 'profile.show.email'|trans }} : {{ user.email }}
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="{{ path('fos_user_profile_edit') }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-edit"></span> Modifier mon compte
+                    </a>
+                    <a href="{{ path('fos_user_change_password') }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-lock"></span> Changer mot de passe
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
