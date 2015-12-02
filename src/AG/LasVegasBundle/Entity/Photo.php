@@ -54,6 +54,14 @@ class Photo
     /**
      * @var string
      *
+     * @ORM\Column(name="size", type="string", length=10)
+     * @Assert\NotBlank()
+     */
+    private $size;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="path", type="string", length=255)
      */
     private $path;
@@ -73,6 +81,13 @@ class Photo
     private $updatedAt;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="taken_at", type="bigint", options={"default": 1430157050})
+     */
+    private $takenAt;
+
+    /**
      * @Assert\File(
      *  maxSize="64000000",
      *  mimeTypes={"image/gif", "image/jpeg", "image/pjpeg", "image/png", "image/x-png"},
@@ -80,18 +95,21 @@ class Photo
      *  mimeTypesMessage="Ce fichier n'est pas une image"
      * )
      */
-    public $file;
+    private $file;
 
 
-    public function __construct()
+    public function __construct(Album $album = null)
     {
         $this->updatedAt = new \DateTime();
+        if (null !== $album) {
+            $this->album = $album;
+        }
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -114,11 +132,39 @@ class Photo
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set size
+     *
+     * @param string $size
+     * @return Photo
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * Get size
+     *
+     * @return string
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    public function getStringedSize()
+    {
+        return $this->size > 1000000 ? round($this->size / 100000)/10 . 'Mo' : round($this->size / 1000) . 'ko';
     }
 
     /**
@@ -137,7 +183,7 @@ class Photo
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
@@ -160,7 +206,7 @@ class Photo
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -191,6 +237,29 @@ class Photo
     }
 
     /**
+     * Set album
+     *
+     * @param Album $album
+     * @return Photo
+     */
+    public function setAlbum(Album $album = null)
+    {
+        $this->album = $album;
+
+        return $this;
+    }
+
+    /**
+     * Get album
+     *
+     * @return Album
+     */
+    public function getAlbum()
+    {
+        return $this->album;
+    }
+
+    /**
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
@@ -212,6 +281,56 @@ class Photo
     {
         return $this->updatedAt;
     }
+
+    /**
+     * Set takenAt
+     *
+     * @param \DateTime $takenAt
+     * @return Photo
+     */
+    public function setTakenAt($takenAt)
+    {
+        $this->takenAt = $takenAt;
+
+        return $this;
+    }
+
+    /**
+     * Get takenAt
+     *
+     * @return \DateTime
+     */
+    public function getTakenAt()
+    {
+        return $this->takenAt;
+    }
+
+    /**
+     * @param $file
+     * @return $this
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     *
+     * Fonctions d'upload
+     *
+     */
 
     public function getAbsolutePath()
     {
@@ -242,8 +361,10 @@ class Photo
      */
     public function preUpload()
     {
-        if (null !== $this->file)
-            $this->path = md5(time()) . '.' . $this->file->guessExtension();
+        if (null !== $this->file) {
+            $this->path = md5(time().rand()) . '.' . $this->file->guessExtension();
+            $this->size = $this->file->getClientSize();
+        }
     }
 
     /**
@@ -258,37 +379,5 @@ class Photo
         $this->file->move($this->getUploadRootDir(), $this->path);
 
         unset($this->file);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath())
-            unlink($file);
-    }
-
-    /**
-     * Set album
-     *
-     * @param \AG\LasVegasBundle\Entity\Album $album
-     * @return Photo
-     */
-    public function setAlbum(\AG\LasVegasBundle\Entity\Album $album = null)
-    {
-        $this->album = $album;
-
-        return $this;
-    }
-
-    /**
-     * Get album
-     *
-     * @return \AG\LasVegasBundle\Entity\Album 
-     */
-    public function getAlbum()
-    {
-        return $this->album;
     }
 }

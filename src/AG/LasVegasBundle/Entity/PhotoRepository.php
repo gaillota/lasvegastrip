@@ -2,7 +2,10 @@
 
 namespace AG\LasVegasBundle\Entity;
 
+use AG\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * PhotoRepository
@@ -12,4 +15,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class PhotoRepository extends EntityRepository
 {
+    public function getPhotos($page, $nbPerPage)
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.album', 'a')
+            ->addSelect('a')
+            ->leftJoin('p.author', 'u')
+            ->addSelect('u')
+            ->orderBy('p.id', 'DESC')
+            ->setFirstResult(($page - 1) * $nbPerPage)
+            ->setMaxResults($nbPerPage)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findMyContributions(User $user)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p.id) nbPhotos, a.id, a.name')
+            ->join('p.album', 'a')
+            ->where('p.author = :user')
+            ->groupBy('a.id')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+    }
 }

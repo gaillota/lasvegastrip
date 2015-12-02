@@ -5,7 +5,7 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallbacks: ["%locale%"] }
+    translator:      { fallbacks: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -76,11 +76,19 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AG\UserBundle\Entity\User
+    service:
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address: noreply@antoine-gaillot.com
+        sender_name: Las Vegas Trip
+    resetting:
+        email:
+            template: AGUserBundle:Resetting:resetting.email.html.twig
 
 # Stof\DoctrineExtensionBundle configuration
 stof_doctrine_extensions:
     uploadable:
-        default_file_path:       %kernel.root_dir%/../www/uploads
+        default_file_path:       %kernel.root_dir%/../web/uploads/photos
         mime_type_guesser_class: Stof\DoctrineExtensionsBundle\Uploadable\MimeTypeGuesserAdapter
         default_file_info_class: Stof\DoctrineExtensionsBundle\Uploadable\UploadedFileInfo
         validate_writable_directory: false
@@ -107,9 +115,27 @@ jms_di_extra:
 jms_security_extra:
     expressions: true
 
-knp_paginator:
-    page_range: 5
-    default_options:
-        page_name: page
-    template:
-        pagination: ::pagination.html.twig
+liip_imagine:
+    resolvers:
+        default:
+            web_path:
+              web_root: %kernel.root_dir%/../web
+              cache_prefix: media/cache
+
+    loaders:
+        default:
+            filesystem:
+                data_root: %kernel.root_dir%/../web/
+
+    driver:               gd
+    cache:                default
+    data_loader:          default
+    default_image:        null
+    controller:
+        filter_action:         liip_imagine.controller:filterAction
+        filter_runtime_action: liip_imagine.controller:filterRuntimeAction
+    filter_sets:
+        my_thumbnail:
+            quality: 50
+            filters:
+                thumbnail: { size: [230, 170], mode: inset }

@@ -1,17 +1,27 @@
 <div class="row" style="margin-top: 10px; margin-bottom: 20px;">
     <div class="col-md-10 col-md-offset-1 col-xs-12">
-        <a class="btn btn-info" href="{{ path('ag_lasvegasbundle_home') }}"><i class="fa fa-home"></i> Las Vegas Trip</a>
+        <a class="btn btn-info" href="{{ path('ag_lasvegasbundle_home') }}"><i class="fa fa-home"></i> <span
+                    class="hidden-xs">Las Vegas Trip</span></a>
+        <a class="btn btn-default" href="{{ path('ag_photo_index') }}"><i class="fa fa-th-list"></i> <span class="hidden-xs">Toutes les photos</span></a>
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-success" href="{{ path('ag_album_new') }}"><i class="fa fa-plus"></i> Nouvel album</a>
+            <a class="btn btn-success" href="{{ path('ag_album_new') }}"><i class="fa fa-plus"></i> <span
+                        class="hidden-xs">Nouvel album</span></a>
         {% endif %}
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user"></i> {{ app.user.username }}<span class="caret"></span>
+                <i class="fa fa-user"></i> {{ app.user }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li><a href="{{ path('fos_user_profile_show') }}"><i class="fa fa-user"></i> Profil</a></li>
-                <li><a href="{{ path('fos_user_change_password') }}"><i class="fa fa-key"></i> Changer mot de passe</a></li>
-                <li><a href="{{ path('ag_album_my_albums') }}"><i class="fa fa-camera-retro"></i> Mes albums</a></li>
+                <li><a href="{{ path('fos_user_change_password') }}"><i class="fa fa-lock"></i> Changer mot de passe</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('ag_user_my_files') }}"><i class="fa fa-files-o"></i> Mes fichiers</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a href="{{ path('ag_admin_index') }}"><i class="fa fa-leaf"></i> Super Administration</a></li>
+                {% elseif is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('ag_user_admin_index') }}"><i class="fa fa-leaf"></i> Administration</a></li>
+                {% endif %}
                 <li class="divider"></li>
                 <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Déconnexion</a></li>
             </ul>

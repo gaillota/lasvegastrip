@@ -2,7 +2,9 @@
 
 namespace AG\LasVegasBundle\Entity;
 
+use AG\UserBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * AlbumRepository
@@ -12,15 +14,32 @@ use Doctrine\ORM\EntityRepository;
  */
 class AlbumRepository extends EntityRepository
 {
-    public function myFindAll()
+    public function getAlbums($page, $nbPerPage)
     {
-        return $this->createQueryBuilder('a')
+        $query = $this->createQueryBuilder('a')
             ->leftJoin('a.photos', 'p')
             ->addSelect('p')
             ->leftJoin('a.author', 'u')
             ->addSelect('u')
+            ->orderBy('a.createdAt', 'DESC')
             ->groupBy('a.id')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
+
+        $query
+            ->setFirstResult(($page - 1) * $nbPerPage)
+            ->setMaxResults($nbPerPage);
+
+        return new Paginator($query, true);
     }
+
+//    public function findMyContributions(User $user)
+//    {
+//        return $this->createQueryBuilder('a')
+//            ->innerJoin('a.photos', 'p', 'WITH', 'a.id = p.album')
+//            ->where('p.author = :user')
+//            ->setParameter('user', $user)
+//            ->getQuery()
+//            ->getResult();
+//
+//    }
 }

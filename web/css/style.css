@@ -1,5 +1,26 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.em {
+    font-style: italic;
+}
+
+.margin10 {
+    margin-top: 10px;
+}
+
+.margin20 {
+    margin-top: 20px;
+}
+
 body {
     /*padding-bottom: 70px;*/
     font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif;
@@ -19,4 +40,24 @@ footer {
 
 .img-shadow {
     box-shadow: 2px 5px 10px #000;
+}
+
+.photo_monitoring, .album_monitoring {
+    display: none;
+}
+
+.img-center {
+    margin: 0 auto;
+}
+
+.album_title {
+    font-size: 15px;
+}
+
+i.fa-spinner {
+    animation: spin 1s linear infinite;
+    display: none;
+    position: absolute;
+    margin-top: 3px;
+    margin-left: 5px;
 }

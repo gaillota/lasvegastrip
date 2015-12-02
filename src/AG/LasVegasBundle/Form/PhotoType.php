@@ -17,16 +17,22 @@ class PhotoType extends AbstractType
         $builder
             ->add('name', 'text', array(
                 'label' => 'Nom',
-                'attr' => array(
-                    'autofocus' => true
-                )
+            ))
+            ->add('size', 'text', array(
+                'label' => 'Taille'
+            ))
+            ->add('takenAt', 'text', array(
+                'label' => 'Date de la prise'
             ))
             ->add('comment', 'textarea', array(
                 'label' => 'Commentaire',
                 'required' => false,
             ))
             ->add('file', 'file', array(
-                'label' => 'Photo'
+                'label' => 'Photos',
+                'attr' => array(
+                    'multiple' => true
+                )
             ))
             ->add('save', 'submit', array(
                 'label' => 'Enregistrer'

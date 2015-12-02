@@ -10,3 +10,6 @@ ag_lasvegasbundle_photo:
     resource: "@AGLasVegasBundle/Resources/config/routing/photo.yml"
     prefix: /photo
 
+ag_lasvegasbundle_admin:
+    resource: "@AGLasVegasBundle/Resources/config/routing/admin.yml"
+    prefix: /admin

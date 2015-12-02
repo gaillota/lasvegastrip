@@ -9,6 +9,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AlbumType extends AbstractType
 {
     /**
+     * @var boolean
+     */
+    private $isSuperAdmin;
+
+    public function __construct($roleFlag)
+    {
+        $this->isSuperAdmin = $roleFlag;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -20,7 +30,15 @@ class AlbumType extends AbstractType
             ))
             ->add('description', 'textarea', array(
                 'label' => 'Description'
-            ))
+            ));
+        if ($this->isSuperAdmin) {
+            $builder
+                ->add('author', 'entity', array(
+                    'class' => 'AGUserBundle:User',
+                    'label' => 'Auteur'
+                ));
+        }
+        $builder
             ->add('save', 'submit', array(
                 'label' => 'Enregistrer'
             ))

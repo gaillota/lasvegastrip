@@ -1,1 +1,11 @@
+ag_user_admin:
+    resource: "@AGUserBundle/Resources/config/routing/admin.yml"
+    prefix: /admin/users
 
+ag_user_my_files:
+    path: /profile/my-files
+    defaults: { _controller: AGUserBundle:Profile:myFiles }
+
+ag_user_profile_edit:
+    path: /profile/edit
+    defaults: { _controller: AGUserBundle:Profile:edit }

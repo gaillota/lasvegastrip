@@ -72,6 +72,15 @@ class Album
     }
 
     /**
+     * @return string
+     */
+    function __toString()
+    {
+        return $this->getName();
+    }
+
+
+    /**
      * Get id
      *
      * @return integer 

@@ -3,7 +3,7 @@
 {% block lasvegasbundle_body %}
     <div class="row">
         <div class="col-xs-12 text-center">
-            <h1>Photo <small>Editer</small></h1>
+            <h1><i class="fa fa-camera-retro"></i> {{ photo.name }} <a class="small" href="{{ path('ag_album_show', { id:photo.album.id }) }}">{{ photo.album.name }}</a></h1>
         </div>
     </div>
     <div class="row">

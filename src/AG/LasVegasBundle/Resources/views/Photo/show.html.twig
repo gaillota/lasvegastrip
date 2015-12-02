@@ -3,18 +3,20 @@
 {% block lasvegasbundle_body %}
     <div class="row">
         <div class="col-xs-12 text-center">
-            <h1 style="margin-bottom: 30px">
-                <a href="{{ path('ag_album_show', { 'id': photo.album.id }) }}">{{ photo.album.name }}</a>
+            <h1>
+                <a href="{{ path('ag_album_show', { 'id': photo.album.id }) }}"><i class="fa fa-arrow-left pull-left"></i></a>
+                {{ photo.album.name }}
             </h1>
         </div>
     </div>
+    <hr/>
     <div class="row">
         <div class="col-md-9">
             <img class="img-responsive img-shadow" src="{{ asset(photo.webpath) }}" alt="album-{{ photo.album.id }}-photo-{{ photo.id }}"/>
         </div>
         <div class="col-md-3">
-            <div class="panel panel-info">
-                <div class="panel-heading">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="word-wrap: break-word;">
                     {{ photo.name }}
                 </div>
                 <div class="panel-body">
@@ -30,8 +32,16 @@
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item text-right">
-                        <small><em>ajouté par</em> {{ photo.author }}<em>
-                        <br>le {{ photo.updatedAt|date("d M Y \à H:i:s") }}</em></small>
+                        <small><em>ajouté par</em> {{ photo.author.firstName }} {{ photo.author.lastName }}
+                        <br/><em>le {{ photo.updatedAt|date('d') ~ ' ' ~ photo.updatedAt|date('M')|trans({}, 'months') ~ ' ' ~ photo.updatedAt|date('Y \\à H:i:s') }}</em>
+                        <br/>prise le
+                        {% if photo.takenAt != 0 %}
+                            {% set newDate = (photo.takenAt / 1000)|round(0, 'floor') %}
+                            {{ newDate|date('d') ~ ' ' ~ newDate|date('M')|trans({}, 'months') ~ ' ' ~ newDate|date('Y \\à H:i:s') }}
+                        {% else %}
+                            27 {{ 'Apr'|trans({}, 'months') }} 2015 à 00:00:00
+                        {% endif %}
+                        </small>
                     </li>
                 </ul>
                 {% if is_granted('ROLE_ADMIN') and app.user == photo.author %}

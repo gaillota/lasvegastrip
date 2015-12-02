@@ -30,6 +30,14 @@ ag_album_upload:
     requirements:
         id: \d+
 
-ag_album_my_albums:
-    path: /my-albums
-    defaults: { _controller: AGLasVegasBundle:Album:myAlbums }
+ag_album_download:
+    path: /{id}/download
+    defaults: { _controller: AGLasVegasBundle:Album:download }
+    requirements:
+        id: \d+
+
+ag_album_my_photos:
+    path: /{id}/my-photos
+    defaults: { _controller: AGLasVegasBundle:Album:myPhotos }
+    requirements:
+        id: \d+

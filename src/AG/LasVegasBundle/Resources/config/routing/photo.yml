@@ -2,10 +2,6 @@ ag_photo_index:
     path: /
     defaults: { _controller: AGLasVegasBundle:Photo:index }
 
-ag_photo_new:
-    path: /new
-    defaults: { _controller: AGLasVegasBundle:Photo:new }
-
 ag_photo_show:
     path: /{id}
     defaults: { _controller: AGLasVegasBundle:Photo:show }
@@ -21,5 +17,29 @@ ag_photo_edit:
 ag_photo_remove:
     path: /{id}/remove
     defaults: { _controller: AGLasVegasBundle:Photo:remove }
+    requirements:
+        id: \d+
+
+ag_photo_rename:
+    path: /{id}/rename-photo
+    defaults: { _controller: AGLasVegasBundle:Photo:rename }
+    requirements:
+        id: \d+
+
+ag_photo_template:
+    path: /{id}/template
+    defaults: { _controller: AGLasVegasBundle:Photo:template }
+    requirements:
+        id: \d+
+
+ag_photo_rotate_right:
+    path: /{id}/rotate-right
+    defaults: { _controller: AGLasVegasBundle:Photo:rotateRight }
+    requirements:
+        id: \d+
+
+ag_photo_rotate_left:
+    path: /{id}/rotate-left
+    defaults: { _controller: AGLasVegasBundle:Photo:rotateLeft }
     requirements:
         id: \d+

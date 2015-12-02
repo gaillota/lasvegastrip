@@ -5,6 +5,7 @@ namespace AG\LasVegasBundle\Entity;
 use AG\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Photo
@@ -27,14 +28,18 @@ class Photo
     /**
      * @var User $author
      *
-     * @ORM\OneToOne(targetEntity="AG\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AG\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="uploaded_by", referencedColumnName="id")
+     * @Gedmo\Blameable(on="create")
      */
     private $author;
 
     /**
      * @var Album $album
      *
-     * @ORM\ManyToOne(targetEntity="AG\LasVegasBundle\Entity\Album", inversedBy="photos")
+     * @ORM\ManyToOne(targetEntity="Album", inversedBy="photos")
+     * @ORM\JoinColumn(nullable=true)
+     * @Assert\Valid()
      */
     private $album;
 
@@ -42,6 +47,7 @@ class Photo
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -49,6 +55,7 @@ class Photo
      * @var string
      *
      * @ORM\Column(name="size", type="string", length=10)
+     * @Assert\NotBlank()
      */
     private $size;
 
@@ -74,6 +81,13 @@ class Photo
     private $updatedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="taken_at", type="datetime")
+     */
+    private $takenAt;
+
+    /**
      * @Assert\File(
      *  maxSize="64000000",
      *  mimeTypes={"image/gif", "image/jpeg", "image/pjpeg", "image/png", "image/x-png"},
@@ -81,18 +95,21 @@ class Photo
      *  mimeTypesMessage="Ce fichier n'est pas une image"
      * )
      */
-    public $file;
+    private $file;
 
 
-    public function __construct()
+    public function __construct(Album $album = null)
     {
         $this->updatedAt = new \DateTime();
+        if (null !== $album) {
+            $this->album = $album;
+        }
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -115,7 +132,7 @@ class Photo
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -138,11 +155,11 @@ class Photo
     /**
      * Get size
      *
-     * @return string 
+     * @return string
      */
     public function getSize()
     {
-        return $this->size;
+        return $this->size > 1000000 ? round($this->size / 100000)/10 . 'Mo' : round($this->size / 1000) . 'ko';
     }
 
     /**
@@ -161,7 +178,7 @@ class Photo
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
@@ -184,7 +201,7 @@ class Photo
     /**
      * Get comment
      *
-     * @return string 
+     * @return string
      */
     public function getComment()
     {
@@ -215,6 +232,29 @@ class Photo
     }
 
     /**
+     * Set album
+     *
+     * @param Album $album
+     * @return Photo
+     */
+    public function setAlbum(Album $album = null)
+    {
+        $this->album = $album;
+
+        return $this;
+    }
+
+    /**
+     * Get album
+     *
+     * @return Album
+     */
+    public function getAlbum()
+    {
+        return $this->album;
+    }
+
+    /**
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
@@ -236,6 +276,33 @@ class Photo
     {
         return $this->updatedAt;
     }
+
+    /**
+     * @param $file
+     * @return $this
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     *
+     * Fonctions d'upload
+     *
+     */
 
     public function getAbsolutePath()
     {
@@ -266,8 +333,10 @@ class Photo
      */
     public function preUpload()
     {
-        if (null !== $this->file)
-            $this->path = md5(time()) . '.' . $this->file->guessExtension();
+        if (null !== $this->file) {
+            $this->path = md5(time().rand()) . '.' . $this->file->guessExtension();
+            $this->size = $this->file->getClientSize();
+        }
     }
 
     /**
@@ -276,7 +345,7 @@ class Photo
      */
     public function upload()
     {
-        if (null == $this->file)
+        if (null === $this->file)
             return;
 
         $this->file->move($this->getUploadRootDir(), $this->path);

@@ -1,9 +1,157 @@
 {% extends 'AGLasVegasBundle::base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}"/>
+{% endblock %}
+
 {% block lasvegasbundle_body %}
     <div class="row">
         <div class="col-xs-12 text-center">
-            <h1>Photo - index</h1>
+            <h1>
+                <a class="pull-left" href="{{ path('ag_lasvegasbundle_home') }}"><i class="fa fa-arrow-left"></i></a>
+                <i class="fa fa-camera-retro"></i> Toutes les photos
+            </h1>
         </div>
     </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="zoom-gallery">
+                <div class="row">
+                    {% set i = 0 %}
+                    {% for photo in listPhotos %}
+                        {% if loop.index >= (page-1)*nbPerPage+1 and loop.index < page*nbPerPage+1 %}
+                            {% set i=i+1 %}
+                            <div class="col-md-3 col-sm-4 col-xs-12 album_thumbnail">
+                                <div class="panel{% if app.user == photo.author %} panel-success{% else %} panel-default{% endif %}">
+                                    <div class="panel-heading" style="word-wrap: break-word;">
+                                        {{ photo.name }}
+                                        {% if app.user == photo.author %}
+                                            <div class="pull-right">
+                                                <button class="btn btn-warning btn-xs album_photo_edit" data-href="{{ path('ag_photo_edit', { 'id': photo.id }) }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-xs"
+                                                        data-remove-href="{{ path('ag_photo_remove', { 'id': photo.id }) }}">
+                                                    <i class="fa fa-remove"></i>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href="{{ asset(photo.webpath) }}"
+                                           data-source="{{ path('ag_photo_show', { 'id': photo.id }) }}"
+                                           title="{{ photo.name }}">
+                                            <img class="img-responsive img-shadow img-center" src="{{ photo.webpath | imagine_filter('my_thumbnail') }}"/>
+                                        </a>
+                                        {% if photo.takenAt != 0 %}
+                                            <p class="margin20 pull-right small em">
+                                                {% set newDate = (photo.takenAt / 1000)|round(0, 'floor') %}
+                                                {{ newDate|date('d') ~ ' ' ~ newDate|date('M')|trans({}, 'months') ~ ' ' ~ newDate|date('Y \\à H:i:s') }}
+                                            </p>
+                                        {% else %}
+                                            <p class="margin20 pull-right small em">27 {{ 'Apr'|trans({}, 'months') }} 2015 à 00:00:00</p>
+                                        {% endif %}
+                                    </div>
+                                    {% if photo.comment is not null %}
+                                        <div class="panel-footer">
+                                            <em><small>{{ photo.comment }}</small></em>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if i is divisible by(4) %}
+                                <div class="clearfix visible-md visible-lg"></div>
+                            {% elseif i is divisible by(3) %}
+                                <div class="clearfix visible-sm"></div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                Il n'y a aucune photo pour le moment.
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if nbPages > 1 %}
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <nav>
+                    <ul class="pagination pagination-sm">
+                        <li{% if page <= 1 %} class="disabled"{% endif %}>
+                            <a href="{{ path('ag_photo_index', { page: page-1 }) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% for p in range(1, nbPages) %}
+                            <li{% if page == p %} class="active"{% endif %}>
+                                <a href="{{ path('ag_photo_index', { page: p }) }}">
+                                    {{ p }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li{% if page >= nbPages %} class="disabled"{% endif %}>
+                            <a href="{{ path('ag_photo_index', { page: page+1 }) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/magnific-popup.js') }}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('.zoom-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                closeOnContentClick: false,
+                closeBtnInside: false,
+                mainClass: 'mfp-with-zoom mfp-img-mobile',
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'" target="_blank">image source</a>';
+                    }
+                },
+                gallery: {
+                    enabled: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300, // don't foget to change the duration also in CSS
+                    opener: function(element) {
+                        return element.find('img');
+                    }
+                }
+
+            });
+
+            $('[data-remove-href]').click(function(e) {
+                e.preventDefault();
+
+                if (confirm('Êtes-vous certain de vouloir supprimer cette photo de l\'album ?')) {
+                    $.get($(this).data('remove-href'));
+                    $(this).parents('.album_thumbnail').animate({opacity:0}, 500, function() {
+                        $(this).remove();
+                    });
+                }
+            });
+
+            $('.album_photo_edit').click(function(e) {
+                e.preventDefault();
+
+                location.href = $(this).data('href');
+            })
+        });
+    </script>
 {% endblock %}
