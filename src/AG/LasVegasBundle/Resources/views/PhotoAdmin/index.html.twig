@@ -1,0 +1,111 @@
+{% extends '::admin.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="active">Photos</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2><i class="fa fa-picture-o"></i> Liste des photos</h2>
+            <div class="table-responsive margin20">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>#</th>
+                        <th>Titre</th>
+                        <th>Commentaire</th>
+                        <th>Prise le</th>
+                        <th>Taille</th>
+                        <th>Auteur (photo)</th>
+                        <th>Album</th>
+                        <th>Auteur (album)</th>
+                        <th></th>
+                    </tr>
+                    {#{% set totalUsed = 0 %}#}
+                    {% for photo in listPhotos %}
+                        {#{% set totalUsed=totalUsed+photo.size %}#}
+                        {% if loop.index >= (page-1)*nbPerPage+1 and loop.index < page*nbPerPage+1 %}
+                            <tr>
+                                <td>{{ photo.id }}</td>
+                                <td>
+                                    <a href="{{ path('ag_photo_show', { id:photo.id }) }}">{{ photo.name }}</a>
+                                </td>
+                                <td>
+                                    {% if photo.comment is null %}
+                                        <span class="em">Aucun commentaire</span>
+                                    {% else %}
+                                        {{ photo.comment }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ (photo.takenAt/1000)|round(0, 'floor')|date('d M Y \\à H:i:s') }}</td>
+                                <td>{{ photo.stringedSize  }}</td>
+                                <td>{{ photo.author.firstName }} {{ photo.author.lastName }}</td>
+                                <td>
+                                    <a href="{{ path('ag_album_show', { id:photo.album.id }) }}">{{ photo.album.name }}</a>
+                                </td>
+                                <td>{{ photo.album.author.firstName }} {{ photo.album.author.lastName }}</td>
+                                <td>
+                                    <a class="btn btn-warning btn-xs" href="{{ path('ag_photo_admin_edit', { id:photo.id }) }}">
+                                        <i class="fa fa-edit"></i> Editer
+                                    </a>
+                                    <a class="btn btn-danger btn-xs" href="{{ path('ag_photo_admin_remove', { id:photo.id }) }}" data-remove="{{ path('ag_photo_admin_remove', { id:photo.id }) }}">
+                                        <i class="fa fa-remove"></i> Supprimer
+                                    </a>
+                                    <i class="fa fa-spinner"></i>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if nbPages > 1 %}
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <nav>
+                    <ul class="pagination pagination-sm">
+                        <li{% if page <= 1 %} class="disabled"{% endif %}>
+                            <a href="{{ path('ag_photo_admin_index', { page: page-1 }) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% for p in range(1, nbPages) %}
+                            <li{% if page == p %} class="active"{% endif %}>
+                                <a href="{{ path('ag_photo_admin_index', { page: p }) }}">
+                                    {{ p }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li{% if page >= nbPages %} class="disabled"{% endif %}>
+                            <a href="{{ path('ag_photo_admin_index', { page: page+1 }) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(function() {
+            $('[data-remove]').click(function(e) {
+                e.preventDefault();
+
+                var $this = $(this);
+                var $row = $this.parent('td').parent('tr');
+                var $spinner = $this.siblings('i.fa-spinner');
+
+                $spinner.show();
+                $.get($this.data('remove'));
+                $row.animate({opacity:0}, 500, function() {
+                    $(this).remove();
+                });
+            })
+        });
+    </script>
+{% endblock %}

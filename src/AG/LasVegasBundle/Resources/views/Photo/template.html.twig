@@ -1,0 +1,7 @@
+{% spaceless %}
+    <div class="photo" data-id="{{ photo.id }}">
+        <img class="img-shadow" src="{{ asset(photo.webpath) }}" alt="photo{{ photo.id }}" width="100%" style="margin-bottom: 10px;" />
+        <div class="name" title="{{ photo.name }}" data-rename="{{ path('ag_photo_rename', { id: photo.id }) }}">{{ photo.name }}</div>
+        <div class="size small em">{{ photo.stringedSize }}</div>
+    </div>
+{% endspaceless %}

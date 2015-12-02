@@ -1,0 +1,160 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}"/>
+{% endblock %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-1">
+            <a href="{{ path('ag_lasvegasbundle_home') }}"><h1><i class="fa fa-arrow-left"></i></h1></a>
+        </div>
+        <div class="col-xs-11">
+            <h1 style="color: #337AB7"><i class="fa fa-folder-open"></i> {{ album.name }} <small><em>Mes photos</em></small></h1>
+            <div class="small">crée le {{ album.createdAt|date('d') ~ ' ' ~ album.createdAt|date('M')|trans({}, 'months') ~ ' ' ~ album.createdAt|date('Y \à H:i:s') }}</div>
+            <div class="small">par <em>{{ album.author.firstName }} {{ album.author.lastName }}</em></div>
+            <div class="small em">
+                {% if album.description is not null %}
+                    {{ album.description }}
+                {% else %}
+                    Aucune description.
+                {% endif %}
+            </div>
+            <div class="pull-right margin10">
+                <a class="btn btn-primary" href="{{ path('ag_album_show', {id:album.id}) }}">
+                    <i class="fa fa-empire"></i> Mes photos
+                </a>
+                <a class="btn btn-success" href="{{ path('ag_album_upload', { id:album.id }) }}">
+                    <i class="fa fa-plus"></i><span class="hidden-xs"> Ajouter des photos</span>
+                </a>
+                <a class="btn btn-warning" href="{{ path('ag_album_edit', { id:album.id }) }}">
+                    <i class="fa fa-edit"></i><span class="hidden-xs"> Editer</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="zoom-gallery">
+                <div class="row">
+                    {#{% set i = 0 %}#}
+                    {% for photo in listPhotos %}
+                        {#{% if loop.index >= (page-1)*nbPerPage+1 and loop.index < page*nbPerPage+1 %}#}
+                            {#{% set i=i+1 %}#}
+                            <div class="col-md-3 col-sm-4 col-xs-6 album_thumbnail">
+                                <div class="panel{% if app.user == photo.author %} panel-success{% else %} panel-default{% endif %}">
+                                    <div class="panel-heading" style="word-wrap: break-word;">
+                                        {{ photo.name }}
+                                            <div class="pull-right photo_monitoring">
+                                                <button class="btn btn-default btn-xs" data-real-href="{{ path('ag_photo_rotate_left', { id:photo.id }) }}">
+                                                    <i class="fa fa-rotate-left"></i>
+                                                </button>
+                                                <button class="btn btn-default btn-xs" data-real-href="{{ path('ag_photo_rotate_right', { id:photo.id }) }}">
+                                                    <i class="fa fa-rotate-right"></i>
+                                                </button>
+                                                <button class="btn btn-warning btn-xs" data-real-href="{{ path('ag_photo_edit', { id:photo.id }) }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-xs"
+                                                        data-remove-href="{{ path('ag_photo_remove', { 'id': photo.id }) }}">
+                                                    <i class="fa fa-remove"></i>
+                                                </button>
+                                            </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href="{{ asset(photo.webpath) }}"
+                                           data-source="{{ path('ag_photo_show', { 'id': photo.id }) }}"
+                                           title="{{ photo.name }}">
+                                            <img class="img-responsive img-shadow img-center" src="{{ photo.webpath | imagine_filter('my_thumbnail')  }}"/>
+                                        </a>
+                                        {% if photo.takenAt != 0 %}
+                                            <p class="margin20 pull-right small em">
+                                                {% set newDate = (photo.takenAt / 1000)|round(0, 'floor') %}
+                                                {{ newDate|date('d') ~ ' ' ~ newDate|date('M')|trans({}, 'months') ~ ' ' ~ newDate|date('Y \\à H:i:s') }}
+                                            </p>
+                                        {% else %}
+                                            <p class="margin20 pull-right small em">27 {{ 'Apr'|trans({}, 'months') }} 2015 à 00:00:00</p>
+                                        {% endif %}
+                                    </div>
+                                    {% if photo.comment is not null %}
+                                        <div class="panel-footer">
+                                            <em><small>{{ photo.comment }}</small></em>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if loop.index is divisible by(4) %}
+                                <div class="clearfix visible-md visible-lg"></div>
+                            {% elseif loop.index is divisible by(3) %}
+                                <div class="clearfix visible-sm"></div>
+                            {% endif %}
+                        {#{% endif %}#}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                Il n'y a aucune photo à vous dans cet album.
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/magnific-popup.js') }}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('.zoom-gallery').magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                closeOnContentClick: false,
+                closeBtnInside: true,
+                mainClass: 'mfp-with-zoom mfp-img-mobile',
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'">Image source</a>';
+                    }
+                },
+                gallery: {
+                    enabled: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300, // don't foget to change the duration also in CSS
+                    opener: function(element) {
+                        return element.find('img');
+                    }
+                }
+
+            });
+
+            $('[data-remove-href]').click(function(e) {
+                e.preventDefault();
+
+                if (confirm('Êtes-vous certain de vouloir supprimer cette photo de l\'album ?')) {
+                    $.get($(this).data('remove-href'));
+                    $(this).parents('.album_thumbnail').animate({opacity:0}, 500, function() {
+                        $(this).remove();
+                    });
+                }
+            });
+
+            $('[data-real-href]').click(function(e) {
+                e.preventDefault();
+
+                location.href = $(this).data('real-href');
+            });
+
+            $('.album_thumbnail .panel').hover(function() {
+                $(this).find('.photo_monitoring').show();
+            }, function() {
+                $(this).find('.photo_monitoring').hide();
+            });
+        });
+    </script>
+{% endblock %}

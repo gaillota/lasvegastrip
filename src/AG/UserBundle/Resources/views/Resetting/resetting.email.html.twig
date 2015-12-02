@@ -1,0 +1,21 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block subject %}
+    {{ 'resetting.email.subject'|trans }}
+{% endblock %}
+
+{% block body_text %}
+    {% autoescape false %}
+        Bonjour {{ user.firstName }} {{ user.lastName }},
+
+        Pour réinitialiser votre mot de passe, merci de cliquer sur le lien suivant :
+        {{ confirmationUrl }}
+
+        Si vous n'avez pas fait de demande de réinitialisation de mot de passe, simplement ignorer cet e-mail.
+
+        Cordialement,
+        L'équipe. (même si je suis tout seul...)
+    {% endautoescape %}
+{% endblock %}
+
+{% block body_html %}{% endblock %}

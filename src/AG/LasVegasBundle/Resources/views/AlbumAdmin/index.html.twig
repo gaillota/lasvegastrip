@@ -1,0 +1,58 @@
+{% extends '::admin.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="active">Albums</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2><i class="fa fa-folder-open"></i> Liste des albums</h2>
+            <div class="table-responsive margin20">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th class="description_column">Description</th>
+                        <th>Création</th>
+                        <th>Auteur</th>
+                        <th># Photos</th>
+                        <th>Taille</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% set totalUsed = 0 %}
+                    {% for album in listAlbums %}
+                        {% set taille = 0 %}
+                        {% for photo in album.photos %}
+                            {% set taille=taille+photo.size %}
+                        {% endfor %}
+                        {% set totalUsed=totalUsed+taille %}
+                        <tr>
+                            <td>{{ album.id }}</td>
+                            <td><a href="{{ path('ag_album_show', { id: album.id }) }}">{{ album.name }}</a></td>
+                            <td>{{ album.description }}</td>
+                            <td>{{ album.createdAt|date('d-m-Y \à H:i:s') }}</td>
+                            <td>{{ album.author.firstName }} {{ album.author.lastName }}</td>
+                            <td class="text-center">{{ album.photos|length }}</td>
+                            <td>{{ taille > 1000000 ? (taille/1000000)|round(2, 'common') ~ 'Mo' : (taille/1000)|round(2, 'common') ~ 'ko' }}</td>
+                            <td>
+                                <a class="btn btn-warning btn-xs" href="{{ path('ag_album_admin_edit', { id:album.id }) }}">
+                                    <i class="fa fa-edit"></i> Editer
+                                </a>
+                                <a class="btn btn-danger btn-xs" href="{{ path('ag_album_admin_remove', { id:album.id }) }}">
+                                    <i class="fa fa-remove"></i> Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr style="background-color: #F9F9F9;">
+                        <td class="text-center" colspan="8">
+                            Total de l'espace utilisé : <strong>{{ totalUsed > 1000000 ? (totalUsed/1000000)|round(2, 'common') ~ 'Mo' : (totalUsed/1000)|round(2, 'common') ~ 'ko' }}</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

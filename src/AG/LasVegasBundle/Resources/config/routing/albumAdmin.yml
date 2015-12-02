@@ -1,0 +1,15 @@
+ag_album_admin_index:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:AlbumAdmin:index }
+
+ag_album_admin_edit:
+    path: /{id}/edit
+    defaults: { _controller: AGLasVegasBundle:AlbumAdmin:edit }
+    requirements:
+        id: \d+
+
+ag_album_admin_remove:
+    path: /{id}/remove
+    defaults: { _controller: AGLasVegasBundle:AlbumAdmin:remove }
+    requirements:
+        id: \d+

@@ -1,0 +1,19 @@
+{% extends '::admin.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{ path('ag_album_admin_index') }}">Albums</a></li>
+    <li class="active">Edition</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h2>Editer l'album "{{ album.name }}" by <span class="small em">{{ album.author.username }}</span></h2>
+            <hr/>
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>An Error Occurred: {{ status_text }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron" style="margin-top: 50px;;">
+        <h1>Héhé ! Bien essayé</h1>
+        <h2>Il semblerait que vous n'ayez pas les droits pour accéder à cette page.</h2>
+        <p>
+            - Erreur {{ status_code }} : {{ status_text }}
+        </p>
+        <p>
+            - Message : {{ exception.message }}
+        </p>
+        <a class="btn btn-default" href="{{ path('ag_lasvegasbundle_home') }}"><i class="fa fa-arrow-left"></i> Revenir à l'accueil calmement</a>
+        <a class="btn btn-info" href="{{ path('ag_lasvegasbundle_home') }}">S'enjailler tous ensemble</a>
+        <a class="btn btn-danger" href="{{ path('ag_lasvegasbundle_home') }}">Désinstaller internet.exe</a>
+    </div>
+</div>
+</body>
+</html>

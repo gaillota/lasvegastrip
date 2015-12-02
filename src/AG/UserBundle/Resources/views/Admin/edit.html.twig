@@ -1,0 +1,21 @@
+{% extends '::admin.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{ path('ag_user_admin_index') }}">Gestion des utilisateurs</a></li>
+    <li class="active">Editer</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h1>Editer l'utilisateur <em>{{ user.username }}</em></h1>
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            {% include 'AGUserBundle:Admin:form.html.twig' %}
+        </div>
+    </div>
+ {% endblock %}

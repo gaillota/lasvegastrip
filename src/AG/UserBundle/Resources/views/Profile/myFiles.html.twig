@@ -1,0 +1,67 @@
+{% extends 'AGLasVegasBundle::base.html.twig' %}
+
+{% block lasvegasbundle_body %}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h2><i class="fa fa-files-o"></i> Mes Fichiers</h2>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <i class="fa fa-folder"></i> Mes Albums ({{ listAlbums|length }})
+                </div>
+                    <ul class="list-group">
+                        {% for album in listAlbums %}
+                            <li class="list-group-item">
+                                <i class="fa fa-folder-open"></i> {{ album.name }}
+                                <div class="pull-right">
+                                    <a class="btn btn-info btn-xs" href="{{ path('ag_album_show', { 'id': album.id }) }}"><i class="fa fa-search"></i> <span class="hidden-xs">Voir</span></a>
+                                    <a class="btn btn-warning btn-xs"
+                                       href="{{ path('ag_album_edit', { 'id': album.id }) }}"><i class="fa fa-edit"></i>
+                                        <span class="hidden-xs">Editer</span></a>
+                                    <a class="btn btn-danger btn-xs" href="{{ path('ag_album_remove', { 'id': album.id }) }}"><i class="fa fa-times"></i> <span class="hidden-xs">Supprimer</span></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item">
+                                Aucun album crée par vos soins.
+                                <a class="btn btn-success btn-xs" href="{{ path('ag_album_new') }}">
+                                    <i class="fa fa-plus"></i> Nouvel album
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <i class="fa fa-camera-retro"></i> Mes Contributions ({{ listContributions|length }})
+                </div>
+                <ul class="list-group">
+                    {% for album in listContributions %}
+                        <li class="list-group-item">
+                            Album : <a href="{{ path('ag_album_show', { 'id': album.id }) }}"> {{ album.name }}</a>,
+                            # de photos ajoutées : {{ album.nbPhotos }}
+                            <div class="pull-right">
+                                {#<a class="btn btn-info btn-xs" href="{{ path('ag_album_show', { 'id': album.id }) }}"><i class="fa fa-search"></i> <span class="hidden-xs">Voir</span></a>#}
+                                <a class="btn btn-warning btn-xs"
+                                   href="{{ path('ag_album_my_photos', { 'id': album.id }) }}"><i class="fa fa-edit"></i>
+                                    <span class="hidden-xs">Modifier mes photos</span></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item">
+                            Aucun album crée par vos soins.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

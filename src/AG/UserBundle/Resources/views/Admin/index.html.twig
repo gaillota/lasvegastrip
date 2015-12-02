@@ -1,0 +1,59 @@
+{% extends '::admin.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="active">Gestion des utilisateurs</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2><i class="fa fa-users"></i> Liste des utilisateurs <a class="btn btn-success btn-xs pull-right" href="{{ path('ag_user_admin_add') }}"><i class="fa fa-user-plus"></i> Ajouter</a></h2>
+            <div class="table-responsive margin20">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>E-mail</th>
+                        <th>Chien de la casse</th>
+                        <th>Last Login</th>
+                        <th>Droits</th>
+                        <th class="text-center">Activé</th>
+                        <th class="text-center">Verrouillé</th>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <th></th>
+                        {% endif %}
+                    </tr>
+                    {% for user in users %}
+                        {% if not user.hasRole('ROLE_SUPER_ADMIN') %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                                <td>
+                                    {% if user.lastLogin is not null %}
+                                        {{ user.lastLogin|date('d-m-Y \à H:i') }}
+                                    {% else %}
+                                        Jamais connecté.
+                                    {% endif %}
+                                </td>
+                                <td>{% for role in user.roles %}<span class="label label-default">{{ role }}</span> {% endfor %}</td>
+                                <td class="text-center">{{ user.enabled == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>' }}</td>
+                                <td class="text-center">{{ user.locked == 1 ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>' }}</td>
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <td>
+                                    <a class="btn btn-warning btn-xs"
+                                       href="{{ path('ag_user_admin_edit', { id: user.id }) }}"><i class="fa fa-edit"></i> Editer</a>
+                                        <a class="btn btn-danger btn-xs"
+                                           href="{{ path('ag_user_admin_remove', { id: user.id }) }}"><i class="fa fa-remove"></i> Supprimer</a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

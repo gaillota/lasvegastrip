@@ -1,0 +1,15 @@
+ag_photo_admin_index:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:PhotoAdmin:index }
+
+ag_photo_admin_edit:
+    path: /{id}/edit
+    defaults: { _controller: AGLasVegasBundle:PhotoAdmin:edit }
+    requirements:
+        id: \d+
+
+ag_photo_admin_remove:
+    path: /{id}/remove
+    defaults: { _controller: AGLasVegasBundle:PhotoAdmin:remove }
+    requirements:
+        id: \d+

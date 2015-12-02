@@ -1,0 +1,29 @@
+{% extends '::admin.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{ path('ag_photo_admin_index') }}">Gestionnaire de photos</a></li>
+    <li class="active">Editer une photo</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Editer une photo</h1>
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
+            <img class="img-responsive img-shadow" src="{{ asset(photo.webpath) }}"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <hr/>
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}

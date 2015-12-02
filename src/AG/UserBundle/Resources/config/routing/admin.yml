@@ -1,0 +1,19 @@
+ag_user_admin_index:
+    path: /
+    defaults: { _controller: AGUserBundle:Admin:index }
+
+ag_user_admin_add:
+    path: /add
+    defaults: { _controller: AGUserBundle:Admin:add }
+
+ag_user_admin_edit:
+    path: /{id}/edit
+    defaults: { _controller: AGUserBundle:Admin:edit }
+    requirements:
+        id: \d+
+
+ag_user_admin_remove:
+    path: /{id}/remove
+    defaults: { _controller: AGUserBundle:Admin:remove }
+    requirements:
+        id: \d+

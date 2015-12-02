@@ -1,0 +1,11 @@
+ag_admin_index:
+    path: /
+    defaults: { _controller: AGLasVegasBundle:Admin:index }
+
+ag_lasvegasbundle_album_admin:
+    resource: "@AGLasVegasBundle/Resources/config/routing/albumAdmin.yml"
+    prefix: /album
+
+ag_lasvegasbundle_photo_admin:
+    resource: "@AGLasVegasBundle/Resources/config/routing/photoAdmin.yml"
+    prefix: /photo

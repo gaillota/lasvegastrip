@@ -1,0 +1,51 @@
+#upload-manager {
+    margin-top: 20px;
+}
+
+#upload-manager .template,
+#upload-manager .form {
+    display: none;
+}
+
+.photo_thumbnail {
+    margin: 10px 0;
+}
+
+.photo {
+    text-align: center;
+}
+
+.icon {
+    position: relative;
+    display: block;
+    font-size: 80px;
+    color: #4EA6EA;
+    cursor: default;
+    margin-bottom: 10px;
+}
+
+.photo_thumbnail .name {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: text;
+}
+
+.photo_thumbnail .name:hover {
+    background: white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+}
+
+.photo .name + input {
+    display: block;
+    background: white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+    width: 100%;
+    height: 21px;
+    line-height: 21px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    text-align: center;
+}

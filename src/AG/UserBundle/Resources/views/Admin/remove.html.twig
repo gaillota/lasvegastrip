@@ -1,0 +1,32 @@
+{% extends '::admin.html.twig' %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{ path('ag_user_admin_index') }}">Gestion des utilisateurs</a></li>
+    <li class="active">Supprimer</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Supprimer l'utilisateur {{ user.username }} - {{ user.firstName }} {{ user.lastName }}</h1>
+            <hr/>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>
+                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                    </p>
+                    <form action="" method="POST">
+                        <a class="btn btn-default" href="{{ path('ag_user_admin_index') }}">
+                            <i class="fa fa-arrow-left"></i> Retour
+                        </a>
+                        <button class="btn btn-danger" type="submit">
+                            <i class="fa fa-trash"></i> Oui, supprimer le sa mère
+                        </button>
+                        {{ form_rest(form) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
